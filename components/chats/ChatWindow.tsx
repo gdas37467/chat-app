@@ -8,7 +8,7 @@ import AvatarGroup from "./AvatarGroup";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useParams, useSearchParams } from "next/navigation";
-import { User } from "./ChatList";
+
 import { UUID } from "crypto";
 import { redirect } from "next/navigation";
 import { VscSmiley } from "react-icons/vsc";
