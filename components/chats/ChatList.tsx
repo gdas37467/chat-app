@@ -51,12 +51,12 @@ function  ChatList() {
  
     
     return (
-    <div className='w-full overflow-y-scroll relative'>
+    <div className=' w-full overflow-y-scroll relative'>
       <ChatListHeader/>
         {users && users.map((u  )=>{
           return <ChatListItem key={u.id} user={u} currentUser ={currentUser}/>
         })}
-        <div className='fixed bottom-10 left-[380px] rounded-full h-8 w-8 bg-green-600 Z-10 flex items-center justify-center'><RiChatAiLine className='text-white'/></div>
+        <div className='fixed bottom-10 left-[30%] rounded-full h-8 w-8 bg-green-600 Z-10 flex items-center justify-center'><RiChatAiLine className='text-white'/></div>
     </div>
   )
 }
