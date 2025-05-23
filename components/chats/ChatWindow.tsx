@@ -19,7 +19,6 @@ import { FaMicrophone } from "react-icons/fa";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
-import { IoFilter } from "react-icons/io5";
 type Message = {
   id: string;
   chat_id: string;
@@ -29,6 +28,9 @@ type Message = {
   sender_name: string | null;
 };
 
+type CurrentUser = {
+  id: string;
+};
 const ChatWindow = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -41,7 +43,7 @@ const ChatWindow = () => {
   ) as UUID | undefined;
 
   console.log(chatId);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -54,7 +56,7 @@ const ChatWindow = () => {
         redirect("/signin");
       }
       console.log("Current user:", user);
-      setCurrentUser(user as User | null);
+      setCurrentUser({ id: user.id });
 
       const { data, error } = await supabase
         .from("messages")
@@ -73,7 +75,16 @@ const ChatWindow = () => {
       if (error) console.error(error);
       if (data) {
         console.log(data);
-        const typedMessages: Message[] = data.map((msg: any) => ({
+        const typedMessages: Message[] = (
+          data as unknown as {
+            id: string;
+            chat_id: string;
+            sender_id: string;
+            content: string;
+            created_at: string;
+            users: { name: string | null } | null;
+          }[]
+        ).map((msg) => ({
           id: msg.id,
           chat_id: msg.chat_id,
           sender_id: msg.sender_id,
@@ -145,7 +156,9 @@ const ChatWindow = () => {
         <div className="flex items-center px-3">
           <AvatarGroup />
           <div className="ml-10">
-            <span><CiSearch/></span>
+            <span>
+              <CiSearch />
+            </span>
           </div>
         </div>
       </div>

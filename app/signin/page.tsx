@@ -23,12 +23,13 @@ export default function Signin() {
 
     if (error) {
       setError(error.message);
+    
     } else {
       console.log("Signed in:", data);
       router.push("/chats"); // or wherever you want
     }
-  };
-
+    };
+      console.log(error)
   return (
     <div className="h-screen flex justify-center flex-col">
       <div className="flex justify-center">

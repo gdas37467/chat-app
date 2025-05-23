@@ -34,7 +34,7 @@ function  ChatList() {
       const { data: users, error } = await supabase
         .from('users')
         .select('*')
-        .neq('id', user.id)
+        .neq('id', user?.id)
 
       console.log('Users:', users)
       console.log('Error:', error)

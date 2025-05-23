@@ -20,48 +20,53 @@ interface ChatListItemProps {
 function ChatListItem({ user, currentUser }: ChatListItemProps) {
   const router = useRouter();
   const handleClick = async () => {
-    console.log("hi")
-    const { data: userChats, error: fetchError } = await supabase
-      .from('chat_members').select('chat_id').eq('user_id', user.id);
-const { data: currentUserChats, error: fetchError2 } = await supabase
-      .from('chat_members').select('chat_id').eq('user_id', currentUser?.id);
-    
+    console.log("hi");
+    const { data: userChats } = await supabase
+      .from("chat_members")
+      .select("chat_id")
+      .eq("user_id", user.id);
+    const { data: currentUserChats } = await supabase
+      .from("chat_members")
+      .select("chat_id")
+      .eq("user_id", currentUser?.id);
 
-  const chatSet1 = new Set(userChats?.map(c => c.chat_id))
+    const chatSet1 = new Set(userChats?.map((c) => c.chat_id));
 
-  const sharedChat= currentUserChats?.find(c => chatSet1.has(c.chat_id))
+    const sharedChat = currentUserChats?.find((c) => chatSet1.has(c.chat_id));
 
+    if (sharedChat) {
+      console.log("Shared chat : ", sharedChat.chat_id);
+      router.push(
+        `/chats/${sharedChat.chat_id}?name=${encodeURIComponent(user.name)}`
+      );
+    } else {
+      console.log("No shared Chat");
+      const { data: newChat, error: error4 } = await supabase
+        .from("chats")
+        .insert([{ is_group: false }])
+        .select()
+        .single();
 
-  if(sharedChat)
-  {
-    console.log('Shared chat : ', sharedChat.chat_id)
-    router.push(`/chats/${sharedChat.chat_id}?name=${encodeURIComponent(user.name)}`)
+      if (error4) {
+        console.log(error4);
+      }
+      if (newChat) {
+        console.log(newChat);
+        const { error: error5 } = await supabase.from("chat_members").insert([
+          { chat_id: newChat.id, user_id: user.id },
+          { chat_id: newChat.id, user_id: currentUser?.id },
+        ]);
 
-  }else{
-
-    console.log('No shared Chat')
-    const {data : newChat , error : error4} = await supabase.from('chats').insert([{is_group : false}]).select().single()
-
-    if(error4)
-    {
-      console.log(error4)
-    }
-    if(newChat)
-    {
-      console.log(newChat)
-      const {error: error5} = await supabase.from('chat_members').insert([{chat_id : newChat.id , user_id : user.id},
-        {chat_id : newChat.id , user_id : currentUser?.id}])
-
-      if(error5)
-      {
-        console.log(error5);
-        
-      }else{
-        console.log('succefully created chat');
-        router.push(`/chats/${newChat.id}/?name=${encodeURIComponent(user.name)}`)
+        if (error5) {
+          console.log(error5);
+        } else {
+          console.log("succefully created chat");
+          router.push(
+            `/chats/${newChat.id}/?name=${encodeURIComponent(user.name)}`
+          );
+        }
       }
     }
-  }
 
     // Create a new chat if it doesn't exist
     // const { data: newChat, error: createError } = await supabase

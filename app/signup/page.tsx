@@ -32,7 +32,7 @@ const SignUp = () => {
       router.push("/chats");
     }
   };
-
+  console.log(error)
   return (
     <div className="h-screen flex justify-center flex-col ">
       <div className="flex justify-center">
