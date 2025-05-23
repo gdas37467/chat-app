@@ -27,7 +27,7 @@ async function  ChatLayout({
 
             <div className="flex flex-1 overflow-hidden">
               <div className="flex flex-1">
-                <div className="flex w-[30%] border-gray-800 bg-white flex-col h-full">
+                <div className="flex w-[33%] border-gray-800 bg-white flex-col h-full">
                   <ChatList />
                 </div>
                 <div className="flex-1 flex flex-col h-full">{children}</div>
